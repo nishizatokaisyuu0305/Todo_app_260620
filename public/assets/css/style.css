@@ -1,9 +1,8 @@
 body {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
   font-family: sans-serif;
   background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
 }
 
 h1 {
@@ -18,12 +17,30 @@ li {
   list-style: none;
 }
 
-button:hover {
-  opacity: 0.8;
+button {
   padding: 8px 12px;
   border-radius: 6px;
   border: none;
   cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.page-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.form-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .container {
@@ -43,6 +60,12 @@ button:hover {
 
   padding: 15px;
   margin-bottom: 10px;
+  transition: 0.2s;
+}
+
+.todo-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
 .todo-actions {
@@ -73,43 +96,82 @@ button:hover {
   margin-top: 4px;
 }
 
-.delete-btn {
-  color: black;
+.btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.edit-btn {
-  color: green;
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
-.add-btn {
+.btn-primary {
+  background-color: #0d6efd;
   color: white;
-  background-color: black;
-  border-radius: 5px;
-  padding: 8px 13px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-success {
+  background-color: #198754;
+  color: white;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.completed-card {
+  background-color: #e8f5e9;
+  border-left: 5px solid gray;
 }
 
 .completed {
   text-decoration: line-through;
   color: gray;
-}
-
-.container {
-  max-width: 800px;
-  margin: 40px auto;
+  background-color: #d1e7dd;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
 }
 
 .page-title {
-  margin-bottom: 24px;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 32px;
+  color: #333;
+}
+
+.todo-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .form-group {
   margin-bottom: 16px;
 }
 
-.btn {
-  padding: 10px 16px;
-}
-
+/* メディアクエリ */
 @media (max-width: 768px) {
   body {
     font-size: 14px;
@@ -120,8 +182,8 @@ button:hover {
   }
 
   .todo-item {
-    margin-top: 10px;
-    align-items: flex-end;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .todo-actions {
