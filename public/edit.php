@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require_once __DIR__ . "/../config/database.php";
 
 // id情報取得・編集SQL実行
@@ -8,7 +9,20 @@ $sql = " SELECT * FROM todos WHERE id = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$id]);
 $todo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$todo) {
+  $_SESSION["flash"] = [
+    "type" => "error",
+    "message" => "対象のTodoが存在しません"
+  ];
+
+  header("Location: index.php");
+  exit;
+}
+
+
 ?>
+
 
 <!-- html表示 -->
 <!DOCTYPE html>
@@ -17,13 +31,26 @@ $todo = $stmt->fetch(PDO::FETCH_ASSOC);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
   <title>編集</title>
 </head>
 <body>
   <div class="container">
     <h1 class="page-title">
+      <i class="fa-solid fa-pen-to-square"></i>
       Todo編集
     </h1>
+
+    <?php if (isset($_SESSION["flash"])): ?>
+      <div class="flash-message flash-<?= $_SESSION["flash"]["type"] ?>">
+        <?= htmlspecialchars($_SESSION["flash"]["message"]) ?>
+      </div>
+
+      <?php unset($_SESSION["flash"]); ?>
+    <?php endif; ?>
 
     <form action="update.php" method="POST" class="todo-form">
       <input type="hidden" name="id" value="<?= $todo["id"] ?>">
@@ -35,9 +62,11 @@ $todo = $stmt->fetch(PDO::FETCH_ASSOC);
       >
       <div class="button-group">
         <button type="submit" class="btn btn-primary">
+          <i class="fa-solid fa-floppy-disk"></i>
           更新
         </button>
         <a href="index.php" class="btn btn-secondary">
+          <i class="fa-solid fa-arrow-left"></i>
           戻る
         </a>
       </div>

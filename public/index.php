@@ -1,5 +1,6 @@
 <?php
 
+session_start();
 require_once __DIR__ . "/../config/database.php";
 
 // データ取得
@@ -18,7 +19,10 @@ foreach ($todos as $todo) {
     $completedTodos[] = $todo;
   }
 }
+
+
 ?>
+
 
 <!-- html表示 -->
 <!DOCTYPE html>
@@ -27,14 +31,38 @@ foreach ($todos as $todo) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  />
   <title>Todoアプリ</title>
 </head>
 <body>
   <div class="container">
     <div class="page-card">
       <h1 class="page-title">
+        <i class="fa-solid fa-list-check"></i>
         Todoリスト
       </h1>
+      <?php if (isset($_SESSION["flash"])): ?>
+        <div class="flash-message flash-<?= $_SESSION["flash"]["type"] ?>">
+          <?= htmlspecialchars($_SESSION["flash"]["message"]) ?>
+        </div>
+        <?php unset($_SESSION["flash"]); ?>
+      <?php endif; ?>
+      <div class="todo-summary">
+        <span>
+          全体: <?= count($todos) ?>件
+        </span>
+        <span class="summary-incomplete">
+          <i class="fa-regular fa-circle"></i>
+          未完了: <?= count($incompleteTodos) ?>件
+        </span>
+        <span class="todo-summary-completed">
+          <i class="fa-solid fa-circle-check"></i>
+          完了済み: <?= count($completedTodos) ?>件
+        </span>
+      </div>
 
       <div class="form-card">
         <form action="create.php" method="POST" class="todo-form">
@@ -45,7 +73,10 @@ foreach ($todos as $todo) {
             class="todo-input"
             placeholder="タスクを入力してください"
           >
-          <button type="submit" class="btn btn-primary">追加</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i>
+            追加
+          </button>
         </form>
       </div>
       <ul>
@@ -70,9 +101,9 @@ foreach ($todos as $todo) {
               >
               <button type="submit">
                 <?php if ($todo["status"] == 0): ?>
-                  ❌
+                  <i class="fa-regular fa-circle"></i>
                 <?php else: ?>
-                  ☑️
+                  <i class="fa-solid fa-circle-check"></i>
                 <?php endif; ?>
               </button>
             </form>
@@ -83,6 +114,7 @@ foreach ($todos as $todo) {
                 value="<?= $todo["id"] ?>"
               >
               <button type="submit" class="btn btn-success">
+                <i class="fa-solid fa-pen"></i>
                 編集
               </button>
             </form>
@@ -92,7 +124,12 @@ foreach ($todos as $todo) {
                 name="id"
                 value="<?= $todo["id"] ?>"
               >
-              <button type="submit" class="btn btn-danger">
+              <button 
+                type="submit" 
+                class="btn btn-danger"
+                onclick="return confirm('本当に削除しますか？')"
+              >
+                <i class="fa-solid fa-trash"></i>
                 削除
               </button>
             </form>
