@@ -47,8 +47,6 @@ $stmt->execute([$newStatus, $id]);
 
 
 // フラッシュメッセージ
-
-
 $_SESSION["flash"] = [
   "type" => "success",
   "message" => "「" . $todo["title"] . "」の状態を更新しました。"

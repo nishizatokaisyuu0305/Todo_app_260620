@@ -213,6 +213,16 @@ button:hover {
   color: #842029;
 }
 
+.search-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-form input {
+  flex: 1;
+}
+
 /* メディアクエリ */
 @media (max-width: 768px) {
   body {

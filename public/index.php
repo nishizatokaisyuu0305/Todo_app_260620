@@ -2,11 +2,20 @@
 
 session_start();
 require_once __DIR__ . "/../config/database.php";
+$keyword = trim($_GET["keyword"] ?? "");
 
 // データ取得
-$sql = "select * from todos";
-$stmt = $pdo->query($sql);
+if ($keyword === "") {
+  $sql = "select * from todos";
+  $stmt = $pdo->query($sql); 
+} else {
+  $sql = "select * from todos where title like ?";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(["%" . "$keyword" . "%"]);
+}
+
 $todos = $stmt->fetchALL(PDO::FETCH_ASSOC);
+
 
 // 未完了取得,完了済み取得
 $incompleteTodos = [];
@@ -79,6 +88,22 @@ foreach ($todos as $todo) {
           </button>
         </form>
       </div>
+      <p>
+        検索結果:
+      <?= count($todos) ?>件
+      </p>
+      <form action="index.php" method="GET" class="search-form">
+        <input 
+        type="text"
+        name="keyword"
+        placeholder="タスクを検索"
+        value="<?= htmlspecialchars($_GET["keyword"] ?? "") ?>"
+        >
+
+        <button type="submit">
+          検索
+        </button>
+      </form>
       <ul>
       <?php foreach ($todos as $todo): ?>
         <li class="todo-item <?= $todo["status"] == 1 ? 'completed-card' : '' ?>">
