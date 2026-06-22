@@ -3,13 +3,18 @@
 session_start();
 require_once __DIR__ . "/../config/database.php";
 $keyword = trim($_GET["keyword"] ?? "");
+$sort = $_GET["sort"] ?? "desc";
 
 // データ取得
+$orderBy = ($sort === "asc")
+  ? "asc"
+  : "desc";
+
 if ($keyword === "") {
-  $sql = "select * from todos";
+  $sql = "select * from todos order by created_at $orderBy";
   $stmt = $pdo->query($sql); 
 } else {
-  $sql = "select * from todos where title like ?";
+  $sql = "select * from todos where title like ? order by created_at $orderBy";
   $stmt = $pdo->prepare($sql);
   $stmt->execute(["%" . "$keyword" . "%"]);
 }
@@ -96,6 +101,7 @@ foreach ($todos as $todo) {
         <input 
         type="text"
         name="keyword"
+        class="search-input"
         placeholder="タスクを検索"
         value="<?= htmlspecialchars($_GET["keyword"] ?? "") ?>"
         >
@@ -103,6 +109,20 @@ foreach ($todos as $todo) {
         <button type="submit">
           検索
         </button>
+      </form>
+      <form method="GET">
+        <input type="hidden" name="keyword" value="<?= htmlspecialchars($keyword) ?>">
+        <label> 並び順 </label>
+        <select name="sort" onchange="this.form.submit()">
+          <option value="desc"
+            <?= $sort === "desc" ? "selected" : "" ?>>
+            新しい順
+          </option>
+          <option value="asc"
+            <?= $sort === "asc" ? "selected" : "" ?>>
+            古い順
+          </option>
+        </select>
       </form>
       <ul>
       <?php foreach ($todos as $todo): ?>

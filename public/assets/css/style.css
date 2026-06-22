@@ -216,11 +216,13 @@ button:hover {
 .search-form {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
-.search-form input {
-  flex: 1;
+.search-input {
+  width: 200px;
+  /* flex: 1; */
 }
 
 /* メディアクエリ */
