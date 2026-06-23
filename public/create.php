@@ -8,12 +8,6 @@ require_once __DIR__ . "/../config/database.php";
 $title = trim($_POST["title"]);
 
 
-// 存在チェック
-$sql = "select * from todos where title = ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$title]);
-$todo = $stmt->fetch(PDO::FETCH_ASSOC);
-
 // バリデーション（空白チェック）
 if ($title === "") {
   $_SESSION["flash"] = [
@@ -27,9 +21,14 @@ if ($title === "") {
 
 
 // 重複チェック
-$sql = "select * from todos where title = ?";
+$sql = "
+select * 
+from todos 
+where title = ?
+and user_id = ?
+";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$title]);
+$stmt->execute([$title, $_SESSION["user_id"]]);
 $existingTodo = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($existingTodo) {
@@ -38,21 +37,21 @@ if ($existingTodo) {
     "message" => "同じTodoが既に存在します"
   ];
 
-  header("Location: edit.php");
+  header("Location: index.php");
   exit;
 }
 
 
 // 登録
-$sql = "INSERT INTO todos (title) VALUES (?)";
+$sql = "INSERT INTO todos (title, user_id) VALUES (?, ?)";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$title]);
+$stmt->execute([$title, $_SESSION["user_id"]]);
 
 
 // 成功メッセージ
 $_SESSION["flash"] = [
   "type" => "success",
-  "message" => "タスクを更新しました"
+  "message" => "タスクを追加しました"
 ];
 
 header("Location: index.php");

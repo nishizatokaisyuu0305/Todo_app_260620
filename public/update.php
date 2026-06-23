@@ -5,12 +5,12 @@ require_once __DIR__ . "/../config/database.php";
 
 // id/タイトルデータ取得・sql設定
 $id = $_POST["id"];
-$title = $_POST["title"];
 $title = trim($_POST["title"]);
-$sql = "
+$updateSql = "
 UPDATE todos
 SET title = ?
 WHERE id = ?
+and user_id = ?
 ";
 
 // バリデーション（空文字チェック）
@@ -26,9 +26,19 @@ if ($title === "") {
 
 
 // 重複チェック
-$sql = "select * from todos where title = ? and id != ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$title, $id]);
+$checkSql = "
+select * 
+from todos 
+where title = ? 
+and id != ?
+and user_id = ?
+";
+$stmt = $pdo->prepare($checkSql);
+$stmt->execute([
+  $title, 
+  $id,
+  $_SESSION["user_id"]
+  ]);
 $todo = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($todo) {
@@ -37,13 +47,18 @@ if ($todo) {
     "message" => "同じTodoが既に存在します"
   ];
 
-  header("Location: edit:php?id=" . $id);
+  header("Location: edit.php?id=" . $id);
+  exit;
 }
 
 
 // 登録
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$title, $id]);
+$stmt = $pdo->prepare($updateSql);
+$stmt->execute([
+  $title, 
+  $id,
+  $_SESSION["user_id"]
+  ]);
 $_SESSION["flash"] = [
   "type" => "success",
   "message" => "タスクを更新しました"

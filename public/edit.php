@@ -1,21 +1,34 @@
 <?php
 
 session_start();
+// 未ログイン制限
+if(!isset($_SESSION["user_id"])) {
+  header("Location: login_form.php");
+  exit;
+}
 require_once __DIR__ . "/../config/database.php";
 
-// id情報取得・編集SQL実行
+// idとuser_id情報取得・編集SQL実行
 $id = $_GET["id"];
-$sql = " SELECT * FROM todos WHERE id = ?";
+$sql = "SELECT * FROM todos WHERE id = ? and user_id = ?";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$id]);
+$stmt->execute([
+  $id,
+  $_SESSION["user_id"]
+  ]);
 $todo = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if (!$todo) {
+if(!$todo) {
   $_SESSION["flash"] = [
     "type" => "error",
     "message" => "対象のTodoが存在しません"
   ];
 
+  header("Location: index.php");
+  exit;
+}
+
+if(!isset($_GET["id"])) {
   header("Location: index.php");
   exit;
 }

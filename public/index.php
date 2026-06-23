@@ -3,7 +3,7 @@
 session_start();
 // 未ログイン制限
 if (!isset($_SESSION["user_id"])) {
-  header("Location: login.php");
+  header("Location: login_form.php");
   exit;
 }
 require_once __DIR__ . "/../config/database.php";
@@ -18,12 +18,21 @@ $orderBy = ($sort === "asc")
   : "desc";
 
 if ($keyword === "") {
-  $sql = "select * from todos order by created_at $orderBy";
+  $sql = "select * from todos where user_id = ? order by created_at $orderBy";
   $stmt = $pdo->query($sql); 
 } else {
-  $sql = "select * from todos where title like ? order by created_at $orderBy";
+  $sql = "
+  select * 
+  from todos 
+  where user_id = ?
+  and title like ? 
+  order by created_at $orderBy
+  ";
   $stmt = $pdo->prepare($sql);
-  $stmt->execute(["%" . "$keyword" . "%"]);
+  $stmt->execute([
+    $_SESSION["user_id"],
+    "%" . "$keyword" . "%"
+    ]);
 }
 
 $todos = $stmt->fetchALL(PDO::FETCH_ASSOC);
