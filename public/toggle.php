@@ -1,18 +1,30 @@
 <?php
 
 session_start();
+if (!isset($_SESSION["user_id"])) {
+  header("Location: login_form.php");
+  exit;
+}
 require_once __DIR__ . "/../config/database.php";
 
 
 // id/statusデータ取得・実行
 $id = $_POST["id"];
+if (!isset($_POST["id"])) {
+  header("Location: index.php");
+  exit;
+}
 $sql = "
 SELECT title, status
 from todos
 WHERE id = ?
+and user_id = ?
 ";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$id]);
+$stmt->execute([
+  $id,
+  $_SESSION["user_id"]
+  ]);
 $todo = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
@@ -41,9 +53,14 @@ $sql = "
 UPDATE todos
 SET status = ?
 WHERE id = ?
+and user_id = ?
 ";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$newStatus, $id]);
+$stmt->execute([
+  $newStatus,
+  $id,
+  $_SESSION["user_id"]
+  ]);
 
 
 // フラッシュメッセージ

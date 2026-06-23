@@ -1,13 +1,33 @@
 <?php
 
 session_start();
+// 未ログイン制限
+if (!isset($_SESSION["user_id"])) {
+  header("Location: login_form.php");
+  exit;
+}
+
 require_once __DIR__ . "/../config/database.php";
+
 
 // ID取得・存在チェック(バリデーション)
 $id = $_POST["id"];
-$sql = "select * FROM todos WHERE id = ?";
+if (!isset($_POST["id"])) {
+  header("Location: index.php");
+  exit;
+}
+
+$sql = "
+  select * 
+  FROM todos 
+  WHERE id = ?
+  and user_id = ?
+  ";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$id]);
+$stmt->execute([
+  $id,
+  $_SESSION["user_id"]
+  ]);
 $todo = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$todo) {
@@ -22,10 +42,17 @@ if (!$todo) {
 
 
 // 削除
-$sql = "delete from todos where id = ?";
+$sql = "
+delete 
+from todos 
+where id = ?
+and user_id = ?
+";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$id]);
-
+$stmt->execute([
+  $id,
+  $_SESSION["user_id"]
+  ]);
 
 
 // 成功メッセージ
