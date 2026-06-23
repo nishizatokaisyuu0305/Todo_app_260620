@@ -1,7 +1,14 @@
 <?php
 
 session_start();
+// 未ログイン制限
+if (!isset($_SESSION["user_id"])) {
+  header("Location: login.php");
+  exit;
+}
 require_once __DIR__ . "/../config/database.php";
+
+
 $keyword = trim($_GET["keyword"] ?? "");
 $sort = $_GET["sort"] ?? "desc";
 

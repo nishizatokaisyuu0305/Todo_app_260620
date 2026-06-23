@@ -9,7 +9,6 @@ $password = $_POST["password"];
 $sql = "select * from users where email = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$email]);
-$stmt->execute([$email]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (

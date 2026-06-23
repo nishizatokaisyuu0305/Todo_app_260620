@@ -19,5 +19,5 @@ $stmt->execute([$name,$email,$passwordHash]);
 
 
 
-header("Location: login.php");
+header("Location: login_form.php");
 exit;
