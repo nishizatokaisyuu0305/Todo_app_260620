@@ -19,7 +19,10 @@ $orderBy = ($sort === "asc")
 
 if ($keyword === "") {
   $sql = "select * from todos where user_id = ? order by created_at $orderBy";
-  $stmt = $pdo->query($sql); 
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute([
+    $_SESSION["user_id"]
+  ]);
 } else {
   $sql = "
   select * 
