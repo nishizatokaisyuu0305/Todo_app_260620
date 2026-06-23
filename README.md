@@ -77,6 +77,11 @@ todo-app
 │   ├── delete.php
 │   ├── edit.php
 │   ├── index.php
+│   ├── login_form.php
+│   ├── login.php
+│   ├── logout.php
+│   ├── register_form.php
+│   ├── register.php
 │   ├── toggle.php
 │   └── update.php
 ├── README.md
