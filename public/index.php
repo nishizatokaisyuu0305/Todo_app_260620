@@ -8,9 +8,18 @@ if (!isset($_SESSION["user_id"])) {
 }
 require_once __DIR__ . "/../config/database.php";
 
-
+// 変数設定
 $keyword = trim($_GET["keyword"] ?? "");
 $sort = $_GET["sort"] ?? "desc";
+$page = $_GET["page"] ?? 1;
+$page = (int)$page;
+if ($page < 1) {
+  $page = 1;
+}
+
+$limit = 5;
+$offset = ($page - 1) * $limit;
+
 
 // データ取得
 $orderBy = ($sort === "asc")
@@ -18,7 +27,13 @@ $orderBy = ($sort === "asc")
   : "desc";
 
 if ($keyword === "") {
-  $sql = "select * from todos where user_id = ? order by created_at $orderBy";
+  $sql = "
+    select * 
+    from todos 
+    where user_id = ? 
+    order by created_at $orderBy
+    limit $limit offset $offset
+    ";
   $stmt = $pdo->prepare($sql);
   $stmt->execute([
     $_SESSION["user_id"]
@@ -30,6 +45,7 @@ if ($keyword === "") {
   where user_id = ?
   and title like ? 
   order by created_at $orderBy
+  limit $limit offset $offset
   ";
   $stmt = $pdo->prepare($sql);
   $stmt->execute([
@@ -52,6 +68,38 @@ foreach ($todos as $todo) {
     $completedTodos[] = $todo;
   }
 }
+
+
+// 総件数取得
+if ($keyword === "") {
+  $countSql = "
+    select count(*)
+    from todos
+    where user_id = ?
+  ";
+
+  $stmt = $pdo->prepare($countSql);
+  $stmt->execute([
+    $_SESSION["user_id"]
+  ]);
+
+} else {
+  $countSql = "
+    select count(*)
+    from todos
+    where user_id = ?
+    and title like ?
+  ";
+
+  $stmt = $pdo->prepare($countSql);
+  $stmt->execute([
+    $_SESSION["user_id"],
+    "%" . $keyword . "%"
+  ]);
+}
+
+$totalCount = $stmt->fetchColumn();
+$totalPages = ceil($totalCount / $limit);
 
 
 ?>
@@ -102,7 +150,7 @@ foreach ($todos as $todo) {
       <?php endif; ?>
       <div class="todo-summary">
         <span>
-          全体: <?= count($todos) ?>件
+          全体: <?= $totalCount ?>件
         </span>
         <span class="summary-incomplete">
           <i class="fa-regular fa-circle"></i>
@@ -218,6 +266,16 @@ foreach ($todos as $todo) {
         </li>
       <?php endforeach; ?>
       </ul>
+      <div class="pagination">
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+          <a 
+            href="?page=<?= $i ?>&keyword=<?= urlencode($keyword) ?>&sort=<?= $sort ?>"
+            class="<?= $page == $i ? 'active' : '' ?>"
+          >
+            <?= $i ?> 
+          </a>
+          <?php endfor; ?>
+      </div>
 
       <h2>未完了タスク</h2>
       <ul>

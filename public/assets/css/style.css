@@ -241,6 +241,25 @@ button:hover {
   color: #555;
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.pagination a {
+  padding: 8px 20px;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.pagination a.active {
+  background: #0d6efd;
+  color: white;
+}
+
 /* メディアクエリ */
 @media (max-width: 768px) {
   body {
