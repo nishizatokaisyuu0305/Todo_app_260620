@@ -225,6 +225,22 @@ button:hover {
   /* flex: 1; */
 }
 
+.user-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.user-bar span {
+  font-weight: bold;
+  color: #555;
+}
+
 /* メディアクエリ */
 @media (max-width: 768px) {
   body {
@@ -248,4 +264,19 @@ button:hover {
   .add-btn {
     width: 100%;
   }
+
+    .user-bar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .user-bar form {
+    width: 100%;
+  }
+
+  .user-bar button {
+    width: 100%;
+  }
+
 }

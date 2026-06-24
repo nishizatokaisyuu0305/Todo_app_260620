@@ -69,6 +69,23 @@ foreach ($todos as $todo) {
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
   />
   <title>Todoアプリ</title>
+  <div class="user-bar">
+    <span>
+      ログイン中：
+      <?=  htmlspecialchars($_SESSION["user_name"]) ?>
+    </span>
+    <form action="logout.php" method="POST">
+    <button
+      type="submit"
+      class="btn btn-secondary"
+      onclick="return confirm('本当にログアウトしますか？')"
+    >
+      <i class="fa-solid fa-right-form-bracket"></i>
+      ログアウト
+    </button>
+    </form>
+  </div>
+  
 </head>
 <body>
   <div class="container">
