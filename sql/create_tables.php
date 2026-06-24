@@ -25,7 +25,11 @@ CREATE TABLE IF NOT EXISTS todos (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ";
 
+// テーブル追加コード
+// ALTER TABLE todos ADD COLUMN due_date DATE NULL;
+
+
+
 // $pdo->exec($sqlUsers);
 // $pdo->exec($sqlTodos);
-
 // echo "テーブル作成完了";

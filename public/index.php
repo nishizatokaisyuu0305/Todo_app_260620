@@ -117,6 +117,9 @@ $totalPages = ceil($totalCount / $limit);
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
   />
   <title>Todoアプリ</title>
+  
+</head>
+<body>
   <div class="user-bar">
     <span>
       ログイン中：
@@ -133,9 +136,7 @@ $totalPages = ceil($totalCount / $limit);
     </button>
     </form>
   </div>
-  
-</head>
-<body>
+
   <div class="container">
     <div class="page-card">
       <h1 class="page-title">
@@ -171,6 +172,8 @@ $totalPages = ceil($totalCount / $limit);
             class="todo-input"
             placeholder="タスクを入力してください"
           >
+          <label>締切日</label>
+            <input type="date" name="due_date">
           <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i>
             追加
@@ -189,11 +192,11 @@ $totalPages = ceil($totalCount / $limit);
         placeholder="タスクを検索"
         value="<?= htmlspecialchars($_GET["keyword"] ?? "") ?>"
         >
-
         <button type="submit">
           検索
         </button>
       </form>
+
       <form method="GET">
         <input type="hidden" name="keyword" value="<?= htmlspecialchars($keyword) ?>">
         <label> 並び順 </label>
@@ -208,9 +211,20 @@ $totalPages = ceil($totalCount / $limit);
           </option>
         </select>
       </form>
+
       <ul>
       <?php foreach ($todos as $todo): ?>
-        <li class="todo-item <?= $todo["status"] == 1 ? 'completed-card' : '' ?>">
+        <?php 
+        $isExpired =
+        $todo["status"] == 0 &&
+        !empty($todo["due_date"]) &&
+        $todo["due_date"] < date("Y-m-d");
+        ?>
+        <li class="
+          todo-item
+          <?= $todo["status"] == 1 ? 'completed-card' : '' ?>
+          <?= $isExpired ? 'expired-card' : '' ?>
+        ">
           <!-- タスク情報 -->
           <div class="todo-content">
             <div class="todo-title">
@@ -219,6 +233,17 @@ $totalPages = ceil($totalCount / $limit);
             <div class="todo-date">
               <?= date("Y-m-d H:i", strtotime($todo["created_at"])) ?>
             </div>
+            <?php if ($todo["due_date"]): ?>
+              <div class="todo-due-date">
+                締切：
+                <?= htmlspecialchars($todo["due_date"]) ?>
+              </div>
+              <?php if ($isExpired): ?>
+                <div class="expired">
+                  ⚠️期限切れ
+                </div>
+              <?php endif; ?>
+            <?php endif; ?>
           </div>
           <!-- ボタン群 -->
           <div class="todo-actions">
@@ -266,6 +291,7 @@ $totalPages = ceil($totalCount / $limit);
         </li>
       <?php endforeach; ?>
       </ul>
+      
       <div class="pagination">
         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
           <a 

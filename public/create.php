@@ -4,9 +4,9 @@ session_start();
 require_once __DIR__ . "/../config/database.php";
 
 
-// titleデータ取得
+// title,due_date取得
 $title = trim($_POST["title"]);
-
+$dueDate = $_POST["due_date"] ?: null;
 
 // バリデーション（空白チェック）
 if ($title === "") {
@@ -43,9 +43,20 @@ if ($existingTodo) {
 
 
 // 登録
-$sql = "INSERT INTO todos (title, user_id) VALUES (?, ?)";
+$sql = "
+  INSERT INTO todos (
+  title,
+  user_id,
+  due_date
+  ) 
+  VALUES (?, ?, ?)
+  ";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$title, $_SESSION["user_id"]]);
+$stmt->execute([
+  $title,
+  $_SESSION["user_id"],
+  $dueDate
+  ]);
 
 
 // 成功メッセージ

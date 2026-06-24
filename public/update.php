@@ -3,12 +3,13 @@
 session_start();
 require_once __DIR__ . "/../config/database.php";
 
-// id/タイトルデータ取得・sql設定
+// id,title,due_dateデータ取得・sql設定
 $id = $_POST["id"];
 $title = trim($_POST["title"]);
+$dueDate =$_POST["due_date"] ?: null;
 $updateSql = "
 UPDATE todos
-SET title = ?
+SET title = ?, due_date = ?
 WHERE id = ?
 and user_id = ?
 ";
@@ -57,7 +58,8 @@ $stmt = $pdo->prepare($updateSql);
 $stmt->execute([
   $title, 
   $id,
-  $_SESSION["user_id"]
+  $_SESSION["user_id"],
+  $dueDate
   ]);
 $_SESSION["flash"] = [
   "type" => "success",

@@ -73,6 +73,12 @@ if(!isset($_GET["id"])) {
         value="<?= htmlspecialchars($todo["title"]) ?>"
         class="todo-input"
       >
+      <label>締切日</label>
+        <input 
+        type="date"
+        name="due_date"
+        value="<?= $todo["due_date"] ?>"
+        >
       <div class="button-group">
         <button type="submit" class="btn btn-primary">
           <i class="fa-solid fa-floppy-disk"></i>
