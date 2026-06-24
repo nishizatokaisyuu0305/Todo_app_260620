@@ -30,6 +30,10 @@ session_start();
       ログイン
     </button>
   </form>
+  <p>
+    アカウントをお持ちでない方は
+    <a href="register_form.php">新規登録はこちら</a>
+  </p>
   
 </body>
 </html>
