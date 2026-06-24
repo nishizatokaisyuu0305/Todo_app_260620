@@ -174,6 +174,14 @@ $totalPages = ceil($totalCount / $limit);
           >
           <label>締切日</label>
             <input type="date" name="due_date">
+          <label>カテゴリ</label>
+          <select name="category">
+            <option value="">選択して下さい</option>
+            <option value="勉強">勉強</option>
+            <option value="仕事">仕事</option>
+            <option value="プライベート">プライベート</option>
+            <option value="その他">その他</option>
+            </select>
           <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i>
             追加
@@ -230,6 +238,13 @@ $totalPages = ceil($totalCount / $limit);
             <div class="todo-title">
               <?= htmlspecialchars($todo["title"]) ?>
             </div>
+
+            <?php if ($todo["category"]): ?>
+              <div class="todo-category">
+                📁<?= htmlspecialchars($todo["category"]) ?>
+              </div>
+            <?php endif; ?>
+
             <div class="todo-date">
               <?= date("Y-m-d H:i", strtotime($todo["created_at"])) ?>
             </div>
@@ -245,6 +260,7 @@ $totalPages = ceil($totalCount / $limit);
               <?php endif; ?>
             <?php endif; ?>
           </div>
+
           <!-- ボタン群 -->
           <div class="todo-actions">
             <form action="toggle.php" method="POST">
@@ -261,6 +277,7 @@ $totalPages = ceil($totalCount / $limit);
                 <?php endif; ?>
               </button>
             </form>
+
             <form action="edit.php" method="GET">
               <input
                 type="hidden"
@@ -272,6 +289,7 @@ $totalPages = ceil($totalCount / $limit);
                 編集
               </button>
             </form>
+            
             <form action="delete.php" method="POST">
               <input
                 type="hidden"

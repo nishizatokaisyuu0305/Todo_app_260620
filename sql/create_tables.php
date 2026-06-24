@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS todos (
 
 // テーブル追加コード
 // ALTER TABLE todos ADD COLUMN due_date DATE NULL;
+// ALTER TABLE todos
+// ADD category VARCHAR(50) DEFAULT NULL;
 
 
 

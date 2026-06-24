@@ -6,10 +6,11 @@ require_once __DIR__ . "/../config/database.php";
 // id,title,due_dateデータ取得・sql設定
 $id = $_POST["id"];
 $title = trim($_POST["title"]);
-$dueDate =$_POST["due_date"] ?: null;
+$dueDate = $_POST["due_date"] ?: null;
+$category = $_POST["category"] ?? null;
 $updateSql = "
 UPDATE todos
-SET title = ?, due_date = ?
+SET title = ?, due_date = ?, category = ?
 WHERE id = ?
 and user_id = ?
 ";
@@ -57,9 +58,10 @@ if ($todo) {
 $stmt = $pdo->prepare($updateSql);
 $stmt->execute([
   $title, 
+  $dueDate,
+  $category,
   $id,
-  $_SESSION["user_id"],
-  $dueDate
+  $_SESSION["user_id"]
   ]);
 $_SESSION["flash"] = [
   "type" => "success",

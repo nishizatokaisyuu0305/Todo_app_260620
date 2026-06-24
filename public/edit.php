@@ -61,7 +61,6 @@ if(!isset($_GET["id"])) {
       <div class="flash-message flash-<?= $_SESSION["flash"]["type"] ?>">
         <?= htmlspecialchars($_SESSION["flash"]["message"]) ?>
       </div>
-
       <?php unset($_SESSION["flash"]); ?>
     <?php endif; ?>
 
@@ -73,6 +72,36 @@ if(!isset($_GET["id"])) {
         value="<?= htmlspecialchars($todo["title"]) ?>"
         class="todo-input"
       >
+
+      <!-- カテゴリ -->
+      <select name="category">
+        <option value="">選択してください</option>
+        <option 
+        value="勉強"
+        <?= $todo["category"] === "勉強" ? "selection" : "" ?>
+        >
+          勉強
+        </option>
+        <option 
+        value="仕事"
+        <?= $todo["category"] === "仕事" ? "selection" : "" ?>
+        >
+          仕事
+        </option>
+        <option 
+        value="プライベート"
+        <?= $todo["category"] === "プライベート" ? "selection" : "" ?>
+        >
+          プライベート
+        </option>
+        <option 
+        value="その他"
+        <?= $todo["category"] === "その他" ? "selection" : "" ?>
+        >
+          その他
+        </option>
+      </select>
+
       <label>締切日</label>
         <input 
         type="date"

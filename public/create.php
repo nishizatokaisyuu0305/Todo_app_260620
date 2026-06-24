@@ -7,6 +7,7 @@ require_once __DIR__ . "/../config/database.php";
 // title,due_date取得
 $title = trim($_POST["title"]);
 $dueDate = $_POST["due_date"] ?: null;
+$category = $_POST["category"] ?: null;
 
 // バリデーション（空白チェック）
 if ($title === "") {
@@ -47,15 +48,17 @@ $sql = "
   INSERT INTO todos (
   title,
   user_id,
-  due_date
+  due_date,
+  category
   ) 
-  VALUES (?, ?, ?)
+  VALUES (?, ?, ?, ?)
   ";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
   $title,
   $_SESSION["user_id"],
-  $dueDate
+  $dueDate,
+  $category
   ]);
 
 
