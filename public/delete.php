@@ -7,18 +7,20 @@ if (!isset($_SESSION["user_id"])) {
   exit;
 }
 
+// csrf検証
+require_once __DIR__ . "/../includes/csrf.php";
+verifyCsrfToken();
+
 require_once __DIR__ . "/../config/database.php";
-
-
 // ID取得・存在チェック(バリデーション)
-$id = $_POST["id"];
 if (!isset($_POST["id"])) {
   header("Location: index.php");
   exit;
 }
+$id = (int)($_POST["id"] ?? 0);
 
 $sql = "
-  select * 
+  select id
   FROM todos 
   WHERE id = ?
   and user_id = ?

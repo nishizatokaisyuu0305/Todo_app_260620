@@ -1,3 +1,11 @@
+<?php
+
+session_start();
+// csrfトークン生成
+generateCsrfToken();
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -8,6 +16,9 @@
 <body>
   <h1>会員情報</h1>
   <form action="register.php" method="POST">
+    <!-- csrfフォーム -->
+    <?= csrfField() ?>
+    
     <label>名前</label>
     <input type="text" name="name">
     <label>メールアドレス</label>

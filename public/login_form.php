@@ -1,6 +1,11 @@
 <?php
 
 session_start();
+// csrfトークン生成
+if (empty($_SESSION["csrf_token"])) {
+  $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+}
+
 
 ?>
 
@@ -22,6 +27,9 @@ session_start();
   <?php endif; ?>
   
   <form action="login.php" method="POST">
+    <!-- csrfフォーム -->
+    <?= csrfField() ?>
+    
     <label>メールアドレス</label>
     <input type="email" name="email" required>
     <label>パスワード</label>

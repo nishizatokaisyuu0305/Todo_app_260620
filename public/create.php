@@ -1,6 +1,8 @@
 <?php
 
 session_start();
+// csrf検証
+verifyCsrfToken();
 require_once __DIR__ . "/../config/database.php";
 
 

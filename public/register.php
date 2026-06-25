@@ -1,7 +1,11 @@
 <?php
 
+session_start();
+// CSRF検証
+verifyCsrfToken();
 require_once __DIR__ . "/../config/database.php";
 
+// name, email, password取得
 $name = trim($_POST["name"]);
 $email = trim($_POST["email"]);
 $password = trim($_POST["password"]);

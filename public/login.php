@@ -1,7 +1,11 @@
 <?php
 
 session_start();
+
+// CSRF検証
+verifyCsrfToken();
 require_once __DIR__ . "/../config/database.php";
+
 
 // パスワード照合
 $email = trim($_POST["email"]);
@@ -17,6 +21,7 @@ if (
 ) {
   $_SESSION["user_id"] = $user["id"];
   $_SESSION["user_name"] = $user["name"];
+  $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
 
   header("Location: index.php");
   exit;

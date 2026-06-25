@@ -1,21 +1,25 @@
 <?php
 
 session_start();
+// 未ログイン制限
 if (!isset($_SESSION["user_id"])) {
   header("Location: login_form.php");
   exit;
 }
+
+// csrf検証
+require_once __DIR__ . "/../includes/csrf.php";
+verifyCsrfToken();
+
 require_once __DIR__ . "/../config/database.php";
-
-
 // id/statusデータ取得・実行
-$id = $_POST["id"];
 if (!isset($_POST["id"])) {
   header("Location: index.php");
   exit;
 }
+$id = (int)($_POST["id"] ?? 0);
 $sql = "
-SELECT title, status
+SELECT id, title, status
 from todos
 WHERE id = ?
 and user_id = ?
@@ -26,7 +30,6 @@ $stmt->execute([
   $_SESSION["user_id"]
   ]);
 $todo = $stmt->fetch(PDO::FETCH_ASSOC);
-
 
 // バリデーション
 if (!$todo) {
@@ -39,14 +42,12 @@ if (!$todo) {
   exit;
 }
 
-
 // status切替
 if ($todo["status"] == 0) {
   $newStatus = 1;
 } else {
   $newStatus = 0;
 }
-
 
 // UPDATE
 $sql = "
@@ -62,13 +63,11 @@ $stmt->execute([
   $_SESSION["user_id"]
   ]);
 
-
 // フラッシュメッセージ
 $_SESSION["flash"] = [
   "type" => "success",
   "message" => "「" . $todo["title"] . "」の状態を更新しました。"
 ];
-
 
 // リダイレクト
 header("Location: index.php");

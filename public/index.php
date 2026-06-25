@@ -6,6 +6,11 @@ if (!isset($_SESSION["user_id"])) {
   header("Location: login_form.php");
   exit;
 }
+
+// CSRFトークン生成
+require_once __DIR__ . "/../includes/csrf.php";
+generateCsrfToken();
+
 require_once __DIR__ . "/../config/database.php";
 
 // 変数設定
@@ -126,6 +131,9 @@ $totalPages = ceil($totalCount / $limit);
       <?=  htmlspecialchars($_SESSION["user_name"]) ?>
     </span>
     <form action="logout.php" method="POST">
+    <!-- csrfフォーム -->
+    <?= csrfField() ?>
+
     <button
       type="submit"
       class="btn btn-secondary"
@@ -165,6 +173,9 @@ $totalPages = ceil($totalCount / $limit);
 
       <div class="form-card">
         <form action="create.php" method="POST" class="todo-form">
+          <!-- csrfフォーム -->
+          <?= csrfField() ?>
+          
           <label for="title">新規タスク入力</label>
           <input 
             type="text" 
@@ -181,7 +192,13 @@ $totalPages = ceil($totalCount / $limit);
             <option value="仕事">仕事</option>
             <option value="プライベート">プライベート</option>
             <option value="その他">その他</option>
-            </select>
+          </select>
+          <label>優先度</label>
+          <select name="priority">
+            <option value="高">高</option>
+            <option value="中">中</option>
+            <option value="低" selected>低</option>
+          </select>
           <button type="submit" class="btn btn-primary">
             <i class="fa-solid fa-plus"></i>
             追加
@@ -240,7 +257,7 @@ $totalPages = ceil($totalCount / $limit);
             </div>
 
             <!-- カテゴリ -->
-            <?php if ($todo["category"]): ?>
+            <?php if (!empty($todo["category"])): ?>
               <div class="todo-category">
                 📁<?= htmlspecialchars($todo["category"]) ?>
               </div>
@@ -250,7 +267,7 @@ $totalPages = ceil($totalCount / $limit);
             <div class="todo-date">
               <?= date("Y-m-d H:i", strtotime($todo["created_at"])) ?>
             </div>
-            <?php if ($todo["due_date"]): ?>
+            <?php if (!empty($todo["due_date"])): ?>
               <div class="todo-due-date">
                 締切：
                 <?= htmlspecialchars($todo["due_date"]) ?>
@@ -264,7 +281,7 @@ $totalPages = ceil($totalCount / $limit);
 
             <!-- 優先度 -->
             <div class="todo-priority">
-              <div class="priority priority-<?= $todo["priority"] ?>">
+              <div class="priority priority-<?= htmlspecialchars($todo["priority"] ?? "低") ?>">
                 優先度：
                 <?= htmlspecialchars($todo["priority"]) ?>
               </div>
@@ -274,6 +291,9 @@ $totalPages = ceil($totalCount / $limit);
           <!-- ボタン群 -->
           <div class="todo-actions">
             <form action="toggle.php" method="POST">
+              <!-- csrfフォーム -->
+              <?= csrfField() ?>
+
               <input
                 type="hidden"
                 name="id"
@@ -301,6 +321,7 @@ $totalPages = ceil($totalCount / $limit);
             </form>
             
             <form action="delete.php" method="POST">
+              <?= csrfField() ?>
               <input
                 type="hidden"
                 name="id"

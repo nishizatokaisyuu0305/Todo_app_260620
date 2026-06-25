@@ -6,10 +6,20 @@ if(!isset($_SESSION["user_id"])) {
   header("Location: login_form.php");
   exit;
 }
+
+// csrfトークン生成
+require_once __DIR__ . "/../includes/csrf.php";
+generateCsrfToken();
+
 require_once __DIR__ . "/../config/database.php";
 
 // idとuser_id情報取得・編集SQL実行
+if(!isset($_GET["id"])) {
+  header("Location: index.php");
+  exit;
+}
 $id = $_GET["id"];
+
 $sql = "SELECT * FROM todos WHERE id = ? and user_id = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
@@ -24,11 +34,6 @@ if(!$todo) {
     "message" => "対象のTodoが存在しません"
   ];
 
-  header("Location: index.php");
-  exit;
-}
-
-if(!isset($_GET["id"])) {
   header("Location: index.php");
   exit;
 }
@@ -65,6 +70,8 @@ if(!isset($_GET["id"])) {
     <?php endif; ?>
 
     <form action="update.php" method="POST" class="todo-form">
+      <!-- csrfフォーム -->
+      <?= csrfField() ?>
       <input type="hidden" name="id" value="<?= $todo["id"] ?>">
       <input 
         type="text" 
@@ -79,25 +86,25 @@ if(!isset($_GET["id"])) {
         <option>選択してください</option>
         <option 
         value="勉強"
-        <?= $todo["category"] === "勉強" ? "selection" : "" ?>
+        <?= $todo["category"] === "勉強" ? "selected" : "" ?>
         >
           勉強
         </option>
         <option 
         value="仕事"
-        <?= $todo["category"] === "仕事" ? "selection" : "" ?>
+        <?= $todo["category"] === "仕事" ? "selected" : "" ?>
         >
           仕事
         </option>
         <option 
         value="プライベート"
-        <?= $todo["category"] === "プライベート" ? "selection" : "" ?>
+        <?= $todo["category"] === "プライベート" ? "selected" : "" ?>
         >
           プライベート
         </option>
         <option 
         value="その他"
-        <?= $todo["category"] === "その他" ? "selection" : "" ?>
+        <?= $todo["category"] === "その他" ? "selected" : "" ?>
         >
           その他
         </option>

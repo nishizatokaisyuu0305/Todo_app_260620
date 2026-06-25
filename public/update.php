@@ -1,6 +1,10 @@
 <?php
 
 session_start();
+// csrf検証
+require_once __DIR__ . "/../includes/csrf.php";
+verifyCsrfToken();
+
 require_once __DIR__ . "/../config/database.php";
 
 // id, title, due_date, category, priorityデータ取得・sql設定
