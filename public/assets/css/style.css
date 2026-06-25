@@ -281,6 +281,29 @@ button:hover {
   font-size: 12px;
 }
 
+.priority {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.priority-高 {
+  background: #ffdddd;
+  color: #d60000;
+}
+
+.priority-中 {
+  background: #fff4cc;
+  color: #b8860b;
+}
+
+.priority-低 {
+  background: #ddffdd;
+  color: #228b22;
+}
+
 /* メディアクエリ */
 @media (max-width: 768px) {
   body {

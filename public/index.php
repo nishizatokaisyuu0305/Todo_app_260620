@@ -239,12 +239,14 @@ $totalPages = ceil($totalCount / $limit);
               <?= htmlspecialchars($todo["title"]) ?>
             </div>
 
+            <!-- カテゴリ -->
             <?php if ($todo["category"]): ?>
               <div class="todo-category">
                 📁<?= htmlspecialchars($todo["category"]) ?>
               </div>
             <?php endif; ?>
 
+            <!-- 締切日 -->
             <div class="todo-date">
               <?= date("Y-m-d H:i", strtotime($todo["created_at"])) ?>
             </div>
@@ -259,8 +261,16 @@ $totalPages = ceil($totalCount / $limit);
                 </div>
               <?php endif; ?>
             <?php endif; ?>
-          </div>
 
+            <!-- 優先度 -->
+            <div class="todo-priority">
+              <div class="priority priority-<?= $todo["priority"] ?>">
+                優先度：
+                <?= htmlspecialchars($todo["priority"]) ?>
+              </div>
+            </div>
+          </div>
+          
           <!-- ボタン群 -->
           <div class="todo-actions">
             <form action="toggle.php" method="POST">

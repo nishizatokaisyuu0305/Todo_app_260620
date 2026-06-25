@@ -3,14 +3,15 @@
 session_start();
 require_once __DIR__ . "/../config/database.php";
 
-// id,title,due_dateデータ取得・sql設定
+// id, title, due_date, category, priorityデータ取得・sql設定
 $id = $_POST["id"];
 $title = trim($_POST["title"]);
 $dueDate = $_POST["due_date"] ?: null;
 $category = $_POST["category"] ?? null;
+$priority = $_POST["priority"] ?? "低";
 $updateSql = "
 UPDATE todos
-SET title = ?, due_date = ?, category = ?
+SET title = ?, due_date = ?, category = ?, priority = ?
 WHERE id = ?
 and user_id = ?
 ";
@@ -60,6 +61,7 @@ $stmt->execute([
   $title, 
   $dueDate,
   $category,
+  $priority,
   $id,
   $_SESSION["user_id"]
   ]);

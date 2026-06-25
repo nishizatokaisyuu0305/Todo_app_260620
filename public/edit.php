@@ -74,8 +74,9 @@ if(!isset($_GET["id"])) {
       >
 
       <!-- カテゴリ -->
+      <label>カテゴリ</label>
       <select name="category">
-        <option value="">選択してください</option>
+        <option>選択してください</option>
         <option 
         value="勉強"
         <?= $todo["category"] === "勉強" ? "selection" : "" ?>
@@ -102,12 +103,38 @@ if(!isset($_GET["id"])) {
         </option>
       </select>
 
+      <!-- 優先度 -->
+      <label>優先度</label>
+      <select name="priority">
+        <option 
+          value="高"
+          <?= $todo["priority"] === "高" ? "selected" : "" ?>
+        >
+          高
+        </option>
+        <option 
+          value="中"
+          <?= $todo["priority"] === "中" ? "selected" : "" ?>
+        >
+          中
+        </option>
+        <option 
+          value="低"
+          <?= $todo["priority"] === "低" ? "selected" : "" ?>
+        >
+          低
+        </option>
+      </select>
+
+      <!-- 締切 -->
       <label>締切日</label>
         <input 
         type="date"
         name="due_date"
         value="<?= $todo["due_date"] ?>"
         >
+
+      <!-- ボタン -->
       <div class="button-group">
         <button type="submit" class="btn btn-primary">
           <i class="fa-solid fa-floppy-disk"></i>
